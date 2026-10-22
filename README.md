@@ -53,6 +53,32 @@ Security requirements, cookie and privacy planning, backup targets, and release 
 - [Pre-build architecture and security plan](Worldbuilding-Wiki-Prebuild-Architecture-Plan.md)
 - [Codex implementation prompt batch](Worldbuilding-Wiki-Codex-Prompt-Batch.md)
 
+## Local development foundation
+
+The repository now contains separate `web` (Next.js) and `api` (ASP.NET Core) services, plus PostgreSQL local development configuration. Production hosting is not configured by this phase.
+
+### Prerequisites
+
+- Node.js 20+ and Bun 1.3.14 (the package manager is pinned in `web/package.json`).
+- .NET SDK 10.0.302 (pinned in `global.json`).
+- Docker Compose.
+
+### Start locally
+
+1. Copy `.env.example` to `.env` at the repository root and set a local database password. Do not commit `.env` files. Set `ConnectionStrings__Wiki` in your shell to the same local connection string when starting the API (the API example uses a placeholder only).
+2. Start PostgreSQL with `docker compose up -d postgres`.
+3. In `api/`, run `dotnet tool restore`, `dotnet restore`, then `dotnet ef database update` to apply the initial migration. Start the API with `dotnet run`.
+4. In `web/`, run `bun install --frozen-lockfile`, then `bun dev`.
+5. Open `http://localhost:3000`. The shell links only to the private wiki surface; authentication is not implemented in this foundation phase, so do not expose this development app to untrusted networks or use real story content.
+
+The API listens on `http://localhost:5080` in development and exposes `/health` and `/health/ready`. The readiness endpoint checks PostgreSQL. Local configuration examples contain placeholders only.
+
+### Checks
+
+- Frontend: `bun run lint`, `bun run typecheck`, `bun run build`.
+- API: `dotnet build api/WorldbuildingWiki.sln`.
+- CI runs the same frontend static checks/build and API build. It does not deploy.
+
 ## Project status
 
-**Planning phase.** Architecture and implementation prompts are documented. Application implementation should begin after the pre-build decisions and security gate in the architecture plan are reviewed. The Author Studio, including themes and subplots, is deferred until the wiki is complete and working.
+**Foundation phase.** The local service structure and shared application shell are in place. Authentication, domain implementation, and production hosting remain future phases. The Author Studio, including themes and subplots, remains deferred.

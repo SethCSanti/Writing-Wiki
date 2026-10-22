@@ -1,0 +1,6 @@
+@WorldbuildingWiki.Api_HostAddress = http://localhost:0
+
+GET {{WorldbuildingWiki.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

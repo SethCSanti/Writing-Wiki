@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+api/**/bin/
+api/**/obj/
+api/.vs/
+api/.idea/
+api/*.user
+api/*.suo
