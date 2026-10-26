@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "./auth/logout-button";
 
 const sections = ["Characters", "Locations", "Nations & Civilizations", "Cultures", "Species", "Religions", "Factions & Groups", "Artifacts", "Weaving", "Languages", "Events", "Terms", "Technologies"];
 
@@ -15,7 +16,7 @@ export default function HomePage() {
         <div className="sidebar-bottom"><span className="status-dot" /> Private workspace</div>
       </aside>
       <main className="main-content">
-        <header className="topbar"><div className="breadcrumbs">Workspace <span>/</span> Overview</div><div className="owner-chip"><span className="avatar">O</span><span>Owner</span></div></header>
+        <header className="topbar"><div className="breadcrumbs">Workspace <span>/</span> Overview</div><div className="owner-chip"><span className="avatar">O</span><span>Owner</span><LogoutButton /></div></header>
         <section className="welcome"><p className="eyebrow">YOUR STORY, ORGANIZED</p><h1>A home for your world.</h1><p className="welcome-copy">Gather the people, places, histories, and ideas that make your story yours.</p></section>
         <section className="stats" aria-label="Workspace summary"><article className="stat-card"><span className="stat-icon">◫</span><div><strong>13</strong><span>Starter categories</span></div></article><article className="stat-card"><span className="stat-icon">⌘</span><div><strong>1</strong><span>Shared timeline</span></div></article><article className="stat-card"><span className="stat-icon">◇</span><div><strong>Private</strong><span>Only you can access</span></div></article></section>
         <section className="category-section" id="categories"><div className="section-heading"><div><p className="eyebrow">THE BUILDING BLOCKS</p><h2>Explore your world</h2></div><p className="section-note">Your categories will appear here as your wiki takes shape.</p></div>

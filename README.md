@@ -65,20 +65,20 @@ The repository now contains separate `web` (Next.js) and `api` (ASP.NET Core) se
 
 ### Start locally
 
-1. Copy `.env.example` to `.env` at the repository root and set a local database password. Do not commit `.env` files. Set `ConnectionStrings__Wiki` in your shell to the same local connection string when starting the API (the API example uses a placeholder only).
+1. Copy `.env.example` to `.env` at the repository root and `api/.env.example` to `api/.env`; set the same local database password in both. Copy `web/.env.local.example` to `web/.env.local`. Do not commit `.env` files. Email is required for owner verification and password reset.
 2. Start PostgreSQL with `docker compose up -d postgres`.
-3. In `api/`, run `dotnet tool restore`, `dotnet restore`, then `dotnet ef database update` to apply the initial migration. Start the API with `dotnet run`.
+3. In `api/`, export the API example settings with `set -a; . ./.env; set +a`, run `dotnet tool restore`, `dotnet restore`, then `dotnet ef database update --project WorldbuildingWiki.Api` to apply migrations. Set a long random `OwnerSetup__Key` and working SMTP settings, then start the API with `dotnet run --project WorldbuildingWiki.Api`.
 4. In `web/`, run `bun install --frozen-lockfile`, then `bun dev`.
-5. Open `http://localhost:3000`. The shell links only to the private wiki surface; authentication is not implemented in this foundation phase, so do not expose this development app to untrusted networks or use real story content.
+5. Open `http://localhost:3000/setup` and provision the single owner. Enroll TOTP and save the one-time recovery codes offline. Sign in at `/login`. Password reset requires configured SMTP settings.
 
-The API listens on `http://localhost:5080` in development and exposes `/health` and `/health/ready`. The readiness endpoint checks PostgreSQL. Local configuration examples contain placeholders only.
+The API listens on `http://localhost:5080` in development and exposes `/health` and `/health/ready`. The readiness endpoint checks PostgreSQL. The web server proxies `/api/*` to the API; do not expose the API listener to browsers in a deployed topology. The gateway forwards the browser scheme to the API so secure antiforgery cookies work across internal HTTP hops; the API trusts forwarded headers only from loopback and explicitly configured proxy IPs. Configure exact trusted ingress addresses for production. Local configuration examples contain placeholders only. The current session defaults (30-minute idle, 8-hour absolute), SMTP wiring, proxy addresses, and Data Protection key persistence are provisional pending the architecture decision review. Identity authenticator and recovery token values are Data Protection encrypted in the Identity token table; production must use a durable, access-controlled key ring.
 
 ### Checks
 
 - Frontend: `bun run lint`, `bun run typecheck`, `bun run build`.
-- API: `dotnet build api/WorldbuildingWiki.sln`.
-- CI runs the same frontend static checks/build and API build. It does not deploy.
+- API: `dotnet build api/WorldbuildingWiki.sln` and `dotnet test api/WorldbuildingWiki.sln`.
+- CI runs the frontend static checks/build and the API test suite. It does not deploy.
 
 ## Project status
 
-**Foundation phase.** The local service structure and shared application shell are in place. Authentication, domain implementation, and production hosting remain future phases. The Author Studio, including themes and subplots, remains deferred.
+**Private access phase.** Identity email/password, required TOTP, recovery codes, owner setup, reset flow, server-managed cookies, CSRF validation, and authorization are implemented. Domain implementation and production hosting remain future phases. The Author Studio, including themes and subplots, remains deferred.

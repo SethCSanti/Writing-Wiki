@@ -31,4 +31,4 @@ jobs:
         with:
           dotnet-version: 10.0.302
       - run: dotnet restore api/WorldbuildingWiki.sln
-      - run: dotnet build api/WorldbuildingWiki.sln --no-restore --configuration Release
+      - run: dotnet test api/WorldbuildingWiki.sln --configuration Release
